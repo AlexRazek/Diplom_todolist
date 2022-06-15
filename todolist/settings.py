@@ -10,33 +10,30 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import os
+# import environ
+from dotenv import load_dotenv
+load_dotenv()
+
 
 from pathlib import Path
-import environ
-import os
 
-from dotenv import load_dotenv
-
-load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from django.template.backends import django
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-env = environ.Env(DEBUG=(bool, False), SECRET_KEY=(str, "xfzit7kfcv"))
+# BASE_DIR = Path(__file__).resolve().parent.parent
+# env = environ.Env(DEBUG=(bool, False), SECRET_KEY=(str, "xfzit7kfcv"))
 ALLOWED_HOSTS = ["*"]
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = env("SECRET_KEY")
-DEBUG = env("DEBUG")
-
+SECRET_KEY = os.environ.get("SECRET_KEY")
+DEBUG = os.environ.get("DEBUG")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-
-
 
 
 # Application definition
@@ -49,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'todolist',
 ]
 
 MIDDLEWARE = [

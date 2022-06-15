@@ -1,0 +1,86 @@
+version: "3.9"
+
+services:
+  front:
+    build:
+      dockerfile: docker/Dockerfile
+      context: front
+    ports:
+      - 8034:80
+    depends_on:
+      - api
+  api:
+    build:
+      context: .
+    ports:
+      - 8000:8000
+    depends_on:
+      postgres:
+        condition: service_healthy #просто порядок запуска
+      migrations:
+        condition: service_completed_successfully #запустить после того как успешно завкершитья другой контейнер
+    volumes:
+      - ./.docker_env:/app/.env
+  migrations:
+    build:
+      context: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./.docker_env:/app/.env
+    command: python3 manage.py migrate
+  bot:
+    build:
+      context: .
+    depends_on:
+      postgres:
+        condition: service_healthy #просто порядок запуска
+      migrations:
+        condition: service_completed_successfully #запустить после того как успешно завкершитья другой контейнер
+    volumes:
+      - ./.docker_env:/app/.env
+    command: python manage.py runbot
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USER
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+
+
+
+
+
+
+
+
+
+#version: "3.9"
+#
+#services:
+#  front:
+    # образ
+    # проброс портов
+    # зависимость от api
+#  api:
+    # секция билд
+    # зависимость от контейнера pg и migrations
+    # волюм с конфигурацией
+#  migrations:
+    # секция билд
+    # зависимость от контейнера pg
+    # волюм с конфигурацией
+    # команда для применения миграций
+#  postgres:
+    # образ
+    # переменные окружения для автоматического создания БД, пользователя и пароля
+    # healthcheck для БД
+    # волюм для данных БД

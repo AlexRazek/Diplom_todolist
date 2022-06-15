@@ -46,7 +46,42 @@ python3 manage.py loadall
 python3 manage.py loaddata fixtures/comments.json 
 
 
+# Посмотреть созданные volume
+docker volume ls
+# Создать volume
+docker volume create
+# Посмотреть детальную информацию
+docker volume inspect <название volume> 
+# Удалить volume
+docker volume rm <название volume> 
+# Удалить все не используемые в данный момент volume
+docker volume prune 
 
+# Проброс volume в контейнер
+docker volume create test
+docker run -v test:/dir_in_container <образ>
+# Название volume–^ ^–Название директории внутри контейнера
+
+# Проброс директории с хоста в контейнер
+docker run -v /host_dir:/dir_in_container -d nginx
+# Абсолютный путь до папки–^              ^-директория внутри контейнера
+
+# Запустить всё приложение (контейнеры, сети и т. д.)
+docker-compose up
+# То же самое, только в режиме демона
+docker-compose up -d
+# Остановить контейнеры
+docker-compose stop
+# Запустить контейнеры
+docker-compose start
+# Остановить контейнеры и удалить все компоненты
+docker-compose down
+# Собрать необходимые образы, но ничего не запускать
+docker-compose build
+# Скачать необходимые образы
+docker-compose pull
+# Посмотреть логи сервисов
+docker-compose logs
 
 
 
