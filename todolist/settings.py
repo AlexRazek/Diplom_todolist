@@ -21,7 +21,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 from django.template.backends import django
 
-# BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 # env = environ.Env(DEBUG=(bool, False), SECRET_KEY=(str, "xfzit7kfcv"))
 ALLOWED_HOSTS = ["*"]
 # Quick-start development settings - unsuitable for production
@@ -82,6 +82,18 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#    },
+# }
 
 DATABASES = {
     "default": {

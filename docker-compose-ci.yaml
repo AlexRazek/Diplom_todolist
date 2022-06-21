@@ -12,8 +12,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      migrations:
-        condition: service_completed_successfully
+#      migrations:
+#        condition: service_completed_successfully
     volumes:
       - ./.env:/app/.env
   migrations:
@@ -27,9 +27,9 @@ services:
   postgres:
     image: postgres:latest
     environment:
-      POSTGRES_PASSWORD: $DB_PASSWORD
-      POSTGRES_DB: $DB_NAME
-      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
