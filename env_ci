@@ -1,9 +1,10 @@
-DEBUG=True
-SECRET_KEY = 'django-insecure-5&(xfzit7kfcv)%5@)*a9q!%gxi^4g$#@f90sjdpadt4)1zkek'
-BOT_TOKEN =
 
-DB_NAME=postgres
-DB_USER=postgres
-DB_PASSWORD=postgres
-DB_HOST=127.0.0.1
-DB_PORT=5432
+DEBUG: ${{DEBUG}}
+SECRET_KEY: ${{SECRET_KEY}}
+
+
+DB_NAME: ${{DB_NAME}}
+DB_USER: ${{DB_USER}}
+DB_PASSWORD: ${{DB_PASSWORD}}
+DB_HOST=${{DB_HOST}}
+DB_PORT=${{DB_PORT}}
