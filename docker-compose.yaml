@@ -17,8 +17,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy #просто порядок запуска
-#      migrations:
-#        condition: service_completed_successfully #запустить после того как успешно завершитcя другой контейнер
+      migrations:
+        condition: service_completed_successfully #запустить после того как успешно завершитcя другой контейнер
     volumes:
       - ./.docker_env:/app/.env
   migrations:
@@ -31,7 +31,7 @@ services:
       - ./.docker_env:/app/.env
     command: python manage.py migrate
   postgres:
-    image: postgres:latest          #13.0-alpine
+    image: 13.7-alpine    #postgres:latest  #13.0-alpine
     env_file:
       - .env
     environment:
