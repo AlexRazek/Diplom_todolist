@@ -33,7 +33,7 @@ services:
   postgres:
     image: 13.7-alpine    #postgres:latest  #13.0-alpine
     env_file:
-      - .env
+      - ./.env
     environment:
       POSTGRES_PASSWORD: $DB_PASSWORD
       POSTGRES_DB: $DB_NAME
