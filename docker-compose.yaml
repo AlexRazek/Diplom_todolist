@@ -35,7 +35,7 @@ services:
         condition: service_healthy
     volumes:
       - ./.docker_env:/app/.env
-    command: python manage.py migrate
+    command: python3 manage.py migrate
 
   postgres:
     image: postgres:13.7-alpine #postgres:latest  #13.0-alpine
