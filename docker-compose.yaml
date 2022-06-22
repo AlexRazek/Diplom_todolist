@@ -23,7 +23,7 @@ services:
 #      migrations:
 #        condition: service_completed_successfully #запустить после того как успешно завершитcя другой контейнер
     volumes:
-      - ./.docker_env:/app/.env
+      - - ./.env:/app/.env #./.docker_env:/app/.env
 
   migrations:
     build:
@@ -34,7 +34,7 @@ services:
       postgres:
         condition: service_healthy
     volumes:
-      - ./.docker_env:/app/.env
+      - - ./.env:/app/.env #./.docker_env:/app/.env
     command: python3 manage.py migrate
 
   postgres:
