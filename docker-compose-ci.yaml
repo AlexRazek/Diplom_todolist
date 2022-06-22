@@ -25,7 +25,7 @@ services:
       - ./.env:/app/.env
     command: python3 manage.py migrate
   postgres:
-    image: 13.7-alpine    #postgres:latest
+    image: postgres:latest
     env_file:
       - .env
     environment:
