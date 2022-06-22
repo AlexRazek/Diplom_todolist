@@ -9,31 +9,38 @@ services:
       - 8034:80
     depends_on:
       - api
+
   api:
     build:
       context: .
+    env_file:
+      - .env
     ports:
       - 8000:8000
     depends_on:
       postgres:
         condition: service_healthy #просто порядок запуска
-      migrations:
-        condition: service_completed_successfully #запустить после того как успешно завершитcя другой контейнер
-    volumes:
-      - ./.docker_env:/app/.env
+#      migrations:
+#        condition: service_completed_successfully #запустить после того как успешно завершитcя другой контейнер
+#    volumes:
+#      - ./.docker_env:/app/.env
+
   migrations:
     build:
       context: .
+    env_file:
+      - .env
     depends_on:
       postgres:
         condition: service_healthy
-    volumes:
-      - ./.docker_env:/app/.env
+#    volumes:
+#      - ./.docker_env:/app/.env
     command: python manage.py migrate
+
   postgres:
     image: postgres:13.7-alpine #postgres:latest  #13.0-alpine
-    env_file:
-      - ./.env
+#    env_file:
+#      - ./.env
     environment:
       POSTGRES_PASSWORD: $DB_PASSWORD
       POSTGRES_DB: $DB_NAME
@@ -45,6 +52,7 @@ services:
       retries: 5
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
+
 volumes:
     postgres-data:
 
