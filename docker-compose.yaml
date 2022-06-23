@@ -50,10 +50,12 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      migrations:
-        condition: service_completed_successfully
+#      migrations:
+#        condition: service_completed_successfully
     command: >
-      sh -c "python3 manage.py runserver 0.0.0.0:8000"
+      sh -c "python3 manage.py makemigrations core &&
+             python3 manage.py migrate &&
+             python3 manage.py runserver 0.0.0.0:8000"
     healthcheck:
       test: curl -sS http://127.0.0.1:8000/health/ || exit 1
       interval: 3s
