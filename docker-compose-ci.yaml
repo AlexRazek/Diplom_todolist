@@ -27,7 +27,11 @@ services:
 
   api:
     image: alexrazek/todolist_alex:$GITHUB_REF_NAME-$GITHUB_RUN_ID
-    environment: *environment-shared
+    environment:
+      POSTGRES_PASSWORD: $DB_PASSWORD
+      POSTGRES_DB: $DB_NAME
+      POSTGRES_USER: $DB_USER
+#    environment: *environment-shared
     restart: always
     depends_on:
       postgres:
