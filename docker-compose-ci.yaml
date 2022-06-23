@@ -4,8 +4,8 @@ x-environment: &environment-shared
   DB_NAME: ${DB_NAME}
   DB_USER: ${DB_USER}
   DB_PASSWORD: ${DB_PASSWORD}
-  DB_HOST: postgres
-  DEBUG: False
+  DB_HOST: ${DB_HOST}
+  DEBUG: ${DEBUG}
   SECRET_KEY: ${SECRET_KEY}
 #  VK_OAUTH2_KEY: ${VK_OAUTH2_KEY}
 #  VK_OAUTH2_SECRET: ${VK_OAUTH2_SECRET}
