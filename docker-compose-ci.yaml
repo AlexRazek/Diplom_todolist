@@ -17,7 +17,7 @@ services:
     image: sermalenk/skypro-front:base
     restart: always
     ports:
-      - "80:80"
+      - '80:80'
     depends_on:
       api:
         condition: service_healthy
