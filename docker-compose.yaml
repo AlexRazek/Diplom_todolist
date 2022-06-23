@@ -1,60 +1,102 @@
 version: "3.9"
 
-services:
-  front:
-    build:
-      dockerfile: docker/Dockerfile
-      context: front
-    ports:
-      - 8034:80
-    depends_on:
-      - api
+x-environment: &environment-shared
+  DB_NAME: ${DB_NAME}
+  DB_USER: ${DB_USER}
+  DB_PASSWORD: ${DB_PASSWORD}
+  DB_HOST: postgres
+  DEBUG: ${DEBUG}
+  SECRET_KEY: ${SECRET_KEY}
+#  VK_OAUTH2_KEY: ${VK_OAUTH2_KEY}
+#  VK_OAUTH2_SECRET: ${VK_OAUTH2_SECRET}
+#  BOT_TOKEN: ${BOT_TOKEN}
 
-  api:
-    build:
-      context: .
-    env_file:
-      - .env
-    ports:
-      - 8000:8000
-    depends_on:
-      postgres:
-        condition: service_healthy #просто порядок запуска
-#      migrations:
-#        condition: service_completed_successfully #запустить после того как успешно завершитcя другой контейнер
-#    volumes:
-#      - - ./.env:/app/.env #./.docker_env:/app/.env
+services:
+
+  postgres:
+    image: postgres:latest    #postgres:13.0-alpine
+    restart: always
+    environment: *environment-shared
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ] #pg_isready -U ${DB_USER} -d ${DB_NAME}
+      interval: 5s
+      timeout: 3s
+      retries: 3
+    networks:
+      - backend_nw
 
   migrations:
     build:
       context: .
-    env_file:
-      - .env
+    environment: *environment-shared
     depends_on:
       postgres:
         condition: service_healthy
-#    volumes:
-#      - - ./.env:/app/.env #./.docker_env:/app/.env
-    command: python3 manage.py migrate
+    command: >
+      sh -c "python3 manage.py migrate"
+    networks:
+      - backend_nw
 
-  postgres:
-    image: postgres:13.7-alpine #postgres:latest  #13.0-alpine
-#    env_file:
-#      - ./.env
-    environment:
-      POSTGRES_PASSWORD: $DB_PASSWORD
-      POSTGRES_DB: $DB_NAME
-      POSTGRES_USER: $DB_USER
+  api:
+    build:
+      context: .
+    environment: *environment-shared
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+#      migrations:
+#        condition: service_completed_successfully
+    command: >
+      sh -c "python3 manage.py runserver 0.0.0.0:8000"
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      test: curl -sS http://127.0.0.1:8000/health/ || exit 1
+      interval: 3s
+      timeout: 3s
+      retries: 3
+    networks:
+      - backend_nw
+      - front_nw
+
+  front:
+    build:
+      dockerfile: docker/Dockerfile
+      context: front
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    networks:
+      - front_nw
 
 volumes:
     postgres-data:
+
+networks:
+  backend_nw:
+    driver: bridge
+  front_nw:
+    driver: bridge
+
+#  bot:
+    #build:
+    #  context: .
+#    environment: *environment-shared
+#    restart: always
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#      migrations:
+#        condition: service_completed_successfully
+#    command: >
+#      sh -c "python3 manage.py runbot"
+#    networks:
+#      - backend_nw
+#      - front_nw
 
 
 
