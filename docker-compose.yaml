@@ -1,31 +1,32 @@
 version: "3.9"
 
 services:
-#  front:
-#    build:
-#      dockerfile: docker/Dockerfile
-#      context: front
-#    ports:
-#      - 8034:80
-#    depends_on:
-#      - api
+  front:
+    build:
+      dockerfile: docker/Dockerfile
+      context: front
+    ports:
+      - '8034:80'
+    depends_on:
+      - api
 
   api:
-    build: .
+    build:
+      context: .
     ports:
-      - "8000:8000"
+      - '8000:8000'
 #    environment:
-#      DB_HOST: ${DB_HOST}
+#      DB_HOST: 127.0.0.1
     env_file:
       - ./.env
 #    ports:
 #        - 8000:8000
-    command: >
-      sh -c "python3 manage.py runserver 0.0.0.0:8000"
 #    command: >
-#      sh -c "python3 manage.py makemigrations core &&
-#             python3 manage.py migrate &&
-#             python3 manage.py runserver 0.0.0.0:8000"
+#      sh -c "python manage.py runserver 0.0.0.0:8000"
+    command: >
+      sh -c "python3 manage.py makemigrations core &&
+             python3 manage.py migrate &&
+             python3 manage.py runserver 0.0.0.0:8000"
     depends_on:
       postgres:
         condition: service_healthy #просто порядок запуска
@@ -53,9 +54,10 @@ services:
     env_file:
       - ./.env
     environment:
-      POSTGRES_PASSWORD: $DB_PASSWORD
-      POSTGRES_DB: $DB_NAME
-      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: postgres #$DB_PASSWORD
+      POSTGRES_DB: postgres #$DB_NAME
+      POSTGRES_USER: postgres #$DB_USER
+      POSTGRES_HOST: 127.0.0.1 #$DB_HOST
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
