@@ -14,7 +14,7 @@ x-environment: &environment-shared
 
 services:
   front:
-    image: sermalenk/skypro-front:base
+    image: sermalenk/skypro-front:lesson-35
     restart: always
     ports:
       - '80:80'
@@ -79,7 +79,7 @@ services:
 
 
   postgres:
-    image: postgres:13.0-alpine
+    image: postgres:14.0-alpine
     restart: always
     environment:
       POSTGRES_PASSWORD: $DB_PASSWORD
