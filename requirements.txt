@@ -11,10 +11,15 @@ Jinja2==3.1.2
 setuptools==62.3.2
 drf-yasg==1.20.0
 django-environ==0.8.1
-django-filter
+django-filter==21.1
 gcc7==0.0.6
 psycopg2-binary==2.9.3
+djangorestframework ==3.13.1
 pyparsing==3.0.5
 coreschema
 python-dotenv~=0.19.2
+social-auth-app-django==5.0.0
+social-auth-app-django-mongoengine==1.0.0
+
+mongoengine==0.24.1
 # environ~=1.0
