@@ -13,9 +13,9 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 import os
 # import environ
 # from os import environ as env
+# import trust as trust
 from dotenv import load_dotenv
 load_dotenv()
-
 
 from pathlib import Path
 
@@ -34,7 +34,6 @@ ALLOWED_HOSTS = ["*"]
 SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = os.environ.get("DEBUG")
 
-
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
 
@@ -48,14 +47,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'drf_yasg',
     'rest_framework',
     'social_django',
-    # 'social_django_mongoengine',
+    # 'corsheaders',
     # 'goals',
     # 'bot',
-    'drf_yasg',
     'core',
-    'todolist',
 ]
 #
 # APPS = ["core", "todolist",]
@@ -85,13 +83,14 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'todolist.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -110,20 +109,25 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",        # "ENGINE": os.environ.get("DB_ENGINE"),
-        "HOST": os.environ.get("DB_HOST"),
+        "ENGINE": "django.db.backends.postgresql_psycopg2",  # "ENGINE": os.environ.get("DB_ENGINE"),
+        "HOST": os.environ.get("DB_HOST", '127.0.0.1'),
         "NAME": os.environ.get("DB_NAME"),
-        "PORT": os.environ.get("DB_PORT"),
+        "PORT": '5432',
         "USER": os.environ.get("DB_USER"),
         "PASSWORD": os.environ.get("DB_PASSWORD"),
     },
 }
 
+# POSTGRES_HOST_AUTH_METHOD=trust
 AUTH_USER_MODEL = 'core.User'
 AUTHENTICATION_BACKENDS = (
     "social_core.backends.vk.VKOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+CORS_ALLOW_CREDENTIALS = True
 
 # Social_auth
 SOCIAL_AUTH_JSONFIELD_ENABLED = True
@@ -141,17 +145,20 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 REST_FRAMEWORK = {
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    # ]
 }
 # SOCIAL_AUTH_STORAGE = 'social_django_mongoengine.models.DjangoStorage'
 
+# SOCIAL_AUTH_JSONFIELD_ENABLED = True
 SOCIAL_AUTH_VK_OAUTH2_KEY = os.environ.get("SOCIAL_AUTH_VK_OAUTH2_KEY")
 SOCIAL_AUTH_VK_OAUTH2_SECRET = os.environ.get("SOCIAL_AUTH_VK_OAUTH2_SECRET")
-SOCIAL_AUTH_VK_OAUTH2_SCOPE = ["email", "photos", "notify"]
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ["email", "notify"]
+# SOCIAL_AUTH_URL_NAMESPACE = 'social'
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/logged-in/"
 SOCIAL_AUTH_LOGIN_ERROR_URL = "/login-error/"
 # Password validation
@@ -188,7 +195,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
@@ -199,5 +205,5 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-BOT_TOKEN = os.environ.get("BOT_TOKEN")
+# BOT_TOKEN = os.environ.get("BOT_TOKEN")
 CSRF_TRUSTED_ORIGINS = ['https://alex-todolist-skypro.ga']

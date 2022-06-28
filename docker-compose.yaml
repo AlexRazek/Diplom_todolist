@@ -1,58 +1,37 @@
 version: "3.9"
 
 services:
-  front:
-    build:
-      dockerfile: docker/Dockerfile
-      context: front
-    ports:
-      - '8034:80'
-    depends_on:
-      - api
 
   api:
     build:
       context: .
-    ports:
-      - '8000:8000'
-#    environment:
-#      DB_HOST: 127.0.0.1
+      dockerfile: Dockerfile
     env_file:
       - ./.env
-#    ports:
-#        - 8000:8000
-#    command: >
-#      sh -c "python manage.py runserver 0.0.0.0:8000"
-    command: >
-      sh -c "python3 manage.py makemigrations core &&
-             python3 manage.py migrate &&
-             python3 manage.py runserver 0.0.0.0:8000"
+    environment:
+      POSTGRES_HOST: 127.0.0.1
+    restart: always
     depends_on:
       postgres:
         condition: service_healthy #просто порядок запуска
-#      migrations:
-#        condition: service_completed_successfully #запустить после того как успешно завершитcя другой контейнер
-#    volumes:
-#      - ./.env:/app/.env    #./.docker_env:/app/.env
-    volumes:
-      - .:/app/
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: curl -sS http://127.0.0.1:8000/health/ || exit 1
+      interval: 3s
+      timeout: 3s
+      retries: 3
 
-#  migrations:
-#    build:
-#      context: .
-#    env_file:
-#      - .env
-#    depends_on:
-#      postgres:
-#        condition: service_healthy
-#    volumes:
-#      - ./.env:/app/.env #./.docker_env:/app/.env
-#    command: python3 manage.py migrate
 
   postgres:
-    image: postgres:14-alpine #postgres:latest  #13.0-alpine
+    image: postgres:13.0-alpine #postgres:latest  #13.0-alpine #postgres:14-alpine
+    restart: always
     env_file:
       - ./.env
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: postgres #$DB_PASSWORD
       POSTGRES_DB: postgres #$DB_NAME
@@ -63,12 +42,24 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+
+
+
+  front:
+    image: sermalenk/skypro-front:lesson_35
+    build:
+      dockerfile: docker/Dockerfile
+      context: front
+    restart: always
+    ports:
+      - "80:80"
+#    depends_on:
+#      api:
+#        condition: service_healthy
+
 
 volumes:
     postgres-data:
-
 
 
 
