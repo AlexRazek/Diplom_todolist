@@ -17,10 +17,9 @@ class SignupView(CreateAPIView):
     permission_classes = [permissions.AllowAny]
     serializer_class = CreateUserSerializer
 
-@method_decorator(csrf_exempt, name='dispatch')
-class LoginView(GenericAPIView):
-    queryset = User.objects.all()
-    model = User
+
+# @method_decorator(csrf_exempt, name='dispatch')
+class LoginApiView(GenericAPIView):
     serializer_class = LoginSerializer
 
     def post(self, request, *args, **kwargs):
@@ -31,7 +30,8 @@ class LoginView(GenericAPIView):
         user_serializer = UserSerializer(instance=user)
         return Response(user_serializer.data)
 
-@method_decorator(csrf_exempt, name='dispatch')
+
+# @method_decorator(csrf_exempt, name='dispatch')
 class ProfileView(RetrieveUpdateDestroyAPIView):
     model = User
     permission_classes = [permissions.IsAuthenticated]
@@ -44,7 +44,8 @@ class ProfileView(RetrieveUpdateDestroyAPIView):
         logout(request)
         return Response({})
 
-@method_decorator(csrf_exempt, name='dispatch')
+
+# @method_decorator(csrf_exempt, name='dispatch')
 class UpdatePasswordView(UpdateAPIView):
     model = User
     permission_classes = [permissions.IsAuthenticated]
