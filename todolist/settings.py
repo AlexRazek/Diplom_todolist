@@ -49,11 +49,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_yasg',
     'rest_framework',
+    'django_filters',
     'social_django',
     # 'corsheaders',
     'goals',
     # 'bot',
     'core',
+
 ]
 #
 # APPS = ["core", "todolist",]
