@@ -1,6 +1,5 @@
 from django.db import transaction
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from core.models import User
 from core.serializers import UserSerializer
@@ -15,19 +14,6 @@ class GoalCategoryCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ("id", "created", "updated", "user", "is_deleted")
         fields = "__all__"
 
-    def validate_board(self, value):
-        if value.is_deleted:
-            raise ValidationError('Not allow to delete category')
-
-        if not BoardParticipant.objects.filter(
-                board=value,
-                role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
-                user=self.context['request'].user
-        ).exists():
-            raise ValidationError('Please check role')
-
-        return value
-
 
 class GoalCategorySerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
@@ -35,7 +21,7 @@ class GoalCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = GoalCategory
         fields = "__all__"
-        read_only_fields = ("id", "created", "updated", "user", "board")
+        read_only_fields = ("id", "created", "updated", "user")
 
 
 class GoalSerializer(serializers.ModelSerializer):
@@ -50,8 +36,8 @@ class GoalSerializer(serializers.ModelSerializer):
         if value.is_deleted:
             raise serializers.ValidationError("not allowed in deleted category")
 
-        if self.instance.category.board_id != value.board_id:
-            raise ValidationError('Transfer not allowed')
+        if value.user != self.context["request"].user:
+            raise serializers.ValidationError("not owner of category")
 
         return value
 
@@ -59,41 +45,22 @@ class GoalSerializer(serializers.ModelSerializer):
 class GoalCreateSerializer(GoalSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
-    def validate_category(self, value):
-        if not BoardParticipant.objects.filter(
-                board=value.board_id,
-                role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
-                user=self.context['request'].user
-        ).exists():
-            raise ValidationError('Please check role')
-
-        return value
-
 
 class CommentCreateSerializer(serializers.ModelSerializer):
     class Meta:
         models = GoalComment
         fields = "__all__"
-        read_only_fields = ("id", "created", "updated", "user")
+        read_only_fields = ("id", "created", "updated")
 
     def validate_goal(self, value):
-        if not BoardParticipant.objects.filter(
-                board=value.category.board_id,
-                role__in=[BoardParticipant.Role.owner, BoardParticipant.Role.writer],
-                user=self.context['request'].user
-        ).exists():
-            raise ValidationError('Please check role')
-
+        if value.user != self.context['request'].user:
+            raise ValueError('Not owner')
         return value
 
 
-class CommentSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
-
-    class Meta:
-        models = GoalComment
-        fields = "__all__"
-        read_only_fields = ("id", "created", "updated", "user", "goal")
+class CommentSerializer(CommentCreateSerializer):
+    # goal = GoalSerializer(read_only=True)
+    user = UserSerializer(read_only=True)  # sourse='goal.user' #sourse='goal.category.user'
 
 
 class BoardCreateSerializer(serializers.ModelSerializer):
@@ -129,7 +96,6 @@ class BoardParticipantSerializer(serializers.ModelSerializer):
 
 class BoardSerializer(serializers.ModelSerializer):
     participants = BoardParticipantSerializer(many=True)
-
     # user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
