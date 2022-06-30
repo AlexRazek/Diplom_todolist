@@ -83,6 +83,8 @@ docker-compose pull
 # Посмотреть логи сервисов
 docker-compose logs
 
+#просмотр
+
 
 
 
