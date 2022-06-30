@@ -48,7 +48,7 @@ services:
 
 
   front:
-    image: sermalenk/skypro-front:lesson_35
+    image: sermalenk/skypro-front:lesson_37
     build:
       dockerfile: docker/Dockerfile
       context: front

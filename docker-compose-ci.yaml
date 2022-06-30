@@ -14,7 +14,7 @@ x-environment: &environment-shared
 
 services:
   front:
-    image: sermalenk/skypro-front:lesson-35
+    image: sermalenk/skypro-front:lesson_37
     restart: always
     ports:
       - '80:80'
