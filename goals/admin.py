@@ -32,3 +32,5 @@ class GoalCommentAdmin(admin.ModelAdmin):
 
 
 admin.site.register(GoalComment, GoalCommentAdmin)
+
+
