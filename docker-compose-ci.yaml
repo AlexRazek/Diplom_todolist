@@ -31,22 +31,10 @@ services:
     networks:
       - backend_nw
 
-
-  migrations:
-    image: alexrazek/todolist_alex:$GITHUB_REF_NAME-$GITHUB_RUN_ID
-    environment: *environment-shared
-    depends_on:
-      postgres:
-        condition: service_healthy
-    command: >
-      sh -c "python3 manage.py migrate"
-    networks:
-      - backend_nw
-
   api:
     image: alexrazek/todolist_alex:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     environment: *environment-shared
-      POSTGRES_HOST: postgres
+      POSTGRES_HOST: ${POSTGRES_HOST}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -57,7 +45,8 @@ services:
       migrations:
         condition: service_completed_successfully
     command: >
-      sh -c "python3 manage.py runserver 0.0.0.0:8000"
+      sh -c "python3 manage.py migrate &&
+            python3 manage.py runserver 0.0.0.0:8000"
     healthcheck:
       test: curl -sS http://127.0.0.1:8000/health/ || exit 1
       interval: 15s
