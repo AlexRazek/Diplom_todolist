@@ -25,7 +25,7 @@ from django.template.backends import django
 BASE_DIR = Path(__file__).resolve().parent.parent
 # env = environ.FileAwareEnv(DEBUG=(bool, False), SECRET_KEY=(str, "xfzit7kfcv"))
 # env = environ.Env(DEBUG=(bool, False), SECRET_KEY=(str, "xfzit7kfcv"))
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*']
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -99,24 +99,17 @@ WSGI_APPLICATION = 'todolist.wsgi.application'
 
 
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#         'NAME': 'postgres',
-#         'USER': 'postgres',
-#         'PASSWORD': 'postgres',
-#         'HOST': '127.0.0.1',
-#         'PORT': '5432',
-#    },
+#     "default": {os.environ.get("DB_ENGINE")}
 # }
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",  # "ENGINE": os.environ.get("DB_ENGINE"),
-        "HOST": os.environ.get("DB_HOST", '127.0.0.1'),
-        "NAME": os.environ.get("DB_NAME"),
-        "PORT": '5432',
-        "USER": os.environ.get("DB_USER"),
-        "PASSWORD": os.environ.get("DB_PASSWORD"),
+        "HOST": os.environ.get("POSTGRES_HOST", "postgres"),
+        "NAME": os.environ.get("POSTGRES_DB"),
+        "PORT": os.environ.get("POSTGRES_PORT"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
     },
 }
 

@@ -1,10 +1,10 @@
 version: "3.9"
 
 x-environment: &environment-shared
-  DB_NAME: ${DB_NAME}
-  DB_USER: ${DB_USER}
-  DB_PASSWORD: ${DB_PASSWORD}
-  DB_HOST: ${DB_HOST}
+  POSTGRES_DB: ${POSTGRES_DB}
+  POSTGRES_USER: ${POSTGRES_USER}
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  POSTGRES_HOST: ${POSTGRES_HOST}
   DEBUG: ${DEBUG}
   SECRET_KEY: ${SECRET_KEY}
   VK_OAUTH2_KEY: ${VK_OAUTH2_KEY}
@@ -28,9 +28,10 @@ services:
   api:
     image: alexrazek/todolist_alex:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     environment:
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-      POSTGRES_USER: ${DB_USER}
+      POSTGRES_HOST: postgres
+#      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#      POSTGRES_DB: ${POSTGRES_DB}
+#      POSTGRES_USER: ${POSTGRES_USER}
 #    environment: *environment-shared
     restart: always
     depends_on:
@@ -51,16 +52,16 @@ services:
       - backend_nw
       - front_nw
 
-  migrations:
-    image: alexrazek/todolist_alex:$GITHUB_REF_NAME-$GITHUB_RUN_ID
-    environment: *environment-shared
-    depends_on:
-      postgres:
-        condition: service_healthy
-    command: >
-      sh -c "python3 manage.py migrate"
-    networks:
-      - backend_nw
+#  migrations:
+#    image: alexrazek/todolist_alex:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+#    environment: *environment-shared
+#    depends_on:
+#      postgres:
+#        condition: service_healthy
+#    command: >
+#      sh -c "python3 manage.py migrate"
+#    networks:
+#      - backend_nw
 
 #  bot:
 #    image: alexrazek/todolist_alex:$GITHUB_REF_NAME-$GITHUB_RUN_ID
@@ -79,12 +80,12 @@ services:
 
 
   postgres:
-    image: postgres:14.0-alpine
+    image: postgres:13.0-alpine
     restart: always
     environment:
-      POSTGRES_PASSWORD: $DB_PASSWORD
-      POSTGRES_DB: $DB_NAME
-      POSTGRES_USER: $DB_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_USER: $POSTGRES_USER
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:

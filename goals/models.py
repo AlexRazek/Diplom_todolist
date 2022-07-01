@@ -1,8 +1,4 @@
 from django.db import models
-
-# Create your models here.
-
-from django.db import models
 from django.utils import timezone
 
 from core.models import User
@@ -21,6 +17,7 @@ class DatesModelMixin(models.Model):
         self.updated = timezone.now()  # Каждый раз, когда вызывается save, проставляем свежую дату обновления
         return super().save(*args, **kwargs)
 
+
 class Board(DatesModelMixin):
     class Meta:
         verbose_name = "Доска"
@@ -28,6 +25,7 @@ class Board(DatesModelMixin):
 
     title = models.CharField(verbose_name="Название", max_length=255)
     is_deleted = models.BooleanField(verbose_name="Удалена", default=False)
+
 
 class BoardParticipant(DatesModelMixin):
     class Meta:
@@ -57,6 +55,7 @@ class BoardParticipant(DatesModelMixin):
     role = models.PositiveSmallIntegerField(
         verbose_name="Роль", choices=Role.choices, default=Role.owner
     )
+
 
 class GoalCategory(DatesModelMixin):
     class Meta:
