@@ -1,13 +1,13 @@
 version: "3.9"
 
 x-environment: &environment-shared
-  POSTGRES_DB: ${POSTGRES_DB}
+  POSTGRES_DB: ${{POSTGRES_DB}}
   POSTGRES_USER: $POSTGRES_USER
   POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
   POSTGRES_HOST: postgres
   DEBUG: False
   SECRET_KEY: 45cd4702f9ca62bb86ba99ca3263d4f7bd22e7cf2bf0c2583212a82f154acee0
-  VK_OAUTH2_KEY: ${SOCIAL_AUTH_VK_OAUTH2_KEY}
+  VK_OAUTH2_KEY: SOCIAL_AUTH_VK_OAUTH2_KEY
   VK_OAUTH2_SECRET: ${SOCIAL_AUTH_VK_OAUTH2_SECRET}
 #  BOT_TOKEN: ${BOT_TOKEN}
 
@@ -17,7 +17,7 @@ services:
   postgres:
     image: postgres:13.0-alpine
     restart: always
-    environment: *environment-shared
+    environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres
@@ -46,7 +46,7 @@ services:
 
   api:
     image: alexrazek/todolist_alex:$GITHUB_REF_NAME-$GITHUB_RUN_ID
-    environment: *environment-shared
+    environment:
       POSTGRES_HOST: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
