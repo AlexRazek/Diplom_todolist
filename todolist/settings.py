@@ -30,8 +30,9 @@ ALLOWED_HOSTS = ['*']
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = (str, "xfzit7kfcv")
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+# SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = os.environ.get("DEBUG")
 
 # SECURITY WARNING: don't run with debug turned on in production!
