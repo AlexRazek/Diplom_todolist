@@ -1,0 +1,9 @@
+DEBUG=True
+SECRET_KEY = 'django-insecure-5&(xfzit7kfcv)%5@)*a9q!%gxi^4g$#@f90sjdpadt4)1zkek'
+
+
+DB_NAME=postgres
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_HOST=127.0.0.1
+DB_PORT=5432
