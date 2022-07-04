@@ -85,7 +85,7 @@ class BoardParticipantInline(admin.TabularInline):
 
 
 class BoardAdmin(admin.ModelAdmin):
-    list_display = ("title", "participants_count", "is_deleted", "owner") # "owner",
+    list_display = ("title", "participants_count", "is_deleted", "owner")        # "owner",
     search_fields = ("title",)
     list_filter = ("is_deleted",)
     inlines = (BoardParticipantInline,)

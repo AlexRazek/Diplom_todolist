@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'social_django',
     # 'corsheaders',
     'goals',
-    # 'bot',
+    'bot',
     'core',
 
 ]
@@ -206,5 +206,5 @@ APPEND_SLASH = False
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# BOT_TOKEN = os.environ.get("BOT_TOKEN")
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
 CSRF_TRUSTED_ORIGINS = ['https://alex-todolist-skypro.ga']
