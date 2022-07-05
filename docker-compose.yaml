@@ -4,18 +4,14 @@ services:
 
   frontend:
     image: sermalenk/skypro-front:lesson_37
-    build:
-      dockerfile: docker/Dockerfile
-      context: front
     restart: always
     ports:
       - "8080:80"
     depends_on:
-      - api
-#        condition: service_healthy
+      api:
+        condition: service_healthy
     networks:
       - frontend_nw
-
 
   api:
     build:
@@ -23,10 +19,6 @@ services:
       dockerfile: Dockerfile
     env_file:
       - ./.env
-#    environment:
-#      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-#      POSTGRES_DB: $POSTGRES_DB
-#      POSTGRES_USER: $POSTGRES_USER
     environment:
       POSTGRES_HOST: postgres
     restart: always
@@ -40,15 +32,14 @@ services:
       - "8000:8000"
     healthcheck:
       test: curl -sS http://127.0.0.1:8000/health/ || exit 1
-      interval: 15s
-      timeout: 5s
-      retries: 5
+      interval: 3s
+      timeout: 3s
+      retries: 3
     volumes:
       - .:/app
     networks:
       - backend_nw
       - frontend_nw
-
 
   postgres:
     image: postgres:13.0-alpine
@@ -59,11 +50,6 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: postgres
-      POSTGRES_USER: postgres
-#      POSTGRES_HOST: postgres
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
@@ -72,10 +58,8 @@ services:
     networks:
       - backend_nw
 
-
 volumes:
-    postgres-data:
-
+  postgres-data:
 
 networks:
   backend_nw:
