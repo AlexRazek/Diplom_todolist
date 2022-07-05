@@ -19,7 +19,7 @@ from rest_framework.permissions import AllowAny
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 
-
+from core.views import health_check
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -39,6 +39,7 @@ urlpatterns = [
     path('oauth/', include('social_django.urls', namespace='social')),
     path('core/', include('core.urls')),
     path('goals/', include('goals.urls')),
+    path('health/', health_check, name='health-check'),
     # path('bot/', include('bot.urls')),
     re_path(r"^swagger/$", schema_view.with_ui("swagger", cache_timeout=0),name="schema-swagger-ui",),
 ]

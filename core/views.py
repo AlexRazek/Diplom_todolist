@@ -1,16 +1,16 @@
-from django.shortcuts import render
 from django.contrib.auth import login, logout
+from rest_framework import permissions
 from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveUpdateDestroyAPIView, GenericAPIView
 from rest_framework.response import Response
-from rest_framework import permissions
+
 from core.models import User
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
-
 from core.serializers import CreateUserSerializer, UserSerializer, LoginSerializer, UpdatePasswordSerializer
+from django.http import JsonResponse
 
 
-# Create your views here.
+def health_check(request):
+    return JsonResponse({'status': 'ok'}, status=200)
+
 
 class SignupView(CreateAPIView):
     model = User
