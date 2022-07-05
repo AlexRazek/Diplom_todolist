@@ -1,0 +1,10 @@
+.venv
+.gitignore
+.github
+.env
+docker-compose.yaml
+docker-compose-ci.yaml
+Dockerfile
+README.md
+.idea
+.DS_Store
