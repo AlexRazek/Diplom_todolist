@@ -54,7 +54,7 @@ INSTALLED_APPS = [
     'social_django',
     # 'corsheaders',
     'goals',
-    # 'bot',
+    'bot',
     'core',
 
 ]
