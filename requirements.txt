@@ -4,7 +4,7 @@ screen~=1.0.1
 attrs~=21.4.0
 toml~=0.10.2
 cryptography==36.0.2
-requests==2.27.1
+requests~=2.27.1
 py~=1.11.0
 Pillow==9.0.1
 Jinja2==3.1.2
@@ -25,3 +25,4 @@ mongoengine==0.24.1
 # environ~=1.0
 
 environ~=1.0
+pydantic~=1.9.1
