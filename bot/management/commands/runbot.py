@@ -15,30 +15,32 @@ class Command(BaseCommand):
         super().__init__(*args, **kwargs)
         self.tg_client = TgClient(settings.BOT_TOKEN)
 
-    # @staticmethod
-    # def _generate_verification_code() -> str:
-    #     return os.urandom(12).hex()
-    #
-    # def handle_user_without_verification(self, msg: Message, tg_user: TgUser):
-    #     code: str = self._generate_verification_code()
-    #     self.tg_client.send_message(
-    #         chat_id=msg.chat.id,
-    #         text=f'[verification code] {code}'
-    #     )
-    #
-    # def handle_message(self, msg: Message):
-    #     tg_user, created = TgUser.objects.get_or_create(
-    #         chat_id=msg.chat.id,
-    #         defaults={
-    #             'username': msg.from_.username
-    #         }
-    #     )
-    #     if created:
-    #         self.tg_client.send_message(msg.chat.id, '[hello]')
-    #     elif not tg_user.user:
-    #         self.handle_user_without_verification(msg=msg, tg_user=tg_user)
-    #     else:
-    #         ...
+    @staticmethod
+    def _generate_verification_code() -> str:
+        return os.urandom(12).hex()
+
+    def handle_user_without_verification(self, msg: Message, tg_user: TgUser):
+        code: str = self._generate_verification_code()
+        tg_user.verification_code = code
+        tg_user.save(update_fields=['verification_code'])
+        self.tg_client.send_message(
+            chat_id=msg.chat.id,
+            text=f'[verification code] {code}'
+        )
+
+    def handle_message(self, msg: Message):
+        tg_user, created = TgUser.objects.get_or_create(
+            chat_id=msg.chat.id,
+            defaults={
+                'username': msg.from_.username
+            }
+        )
+        if created:
+            self.tg_client.send_message(msg.chat.id, '[hello]')
+        elif not tg_user.user:
+            self.handle_user_without_verification(msg=msg, tg_user=tg_user)
+        else:
+            ...
 
     def handle(self, *args, **options):
         offset = 0
