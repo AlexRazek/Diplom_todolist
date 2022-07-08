@@ -27,6 +27,8 @@ services:
         condition: service_healthy
     command: >
       sh -c "python3 manage.py runbot"
+    volumes:
+      - .:/app
     networks:
       - backend_nw
       - frontend_nw
