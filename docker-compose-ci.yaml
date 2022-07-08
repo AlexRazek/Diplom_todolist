@@ -13,6 +13,22 @@ services:
     networks:
       - frontend_nw
 
+  bot:
+    image: alexrazek/todolist_alex:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    env_file:
+      - ./.env
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrations:
+        condition: service_completed_successfully
+    command: >
+      sh -c "python3 manage.py runbot"
+    networks:
+      - backend_nw
+      - frontend_nw
+
   api:
     image: alexrazek/todolist_alex:$GITHUB_REF_NAME-$GITHUB_RUN_ID
     env_file:

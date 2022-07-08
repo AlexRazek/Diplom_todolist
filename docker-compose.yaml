@@ -13,6 +13,21 @@ services:
     networks:
       - frontend_nw
 
+  bot:
+    build:
+      context: .
+    env_file:
+      - ./.env
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "python3 manage.py runbot"
+    networks:
+      - backend_nw
+      - frontend_nw
+
   api:
     build:
       context: .
