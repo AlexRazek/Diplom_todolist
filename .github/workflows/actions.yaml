@@ -51,9 +51,3 @@ jobs:
             docker image prune -a -f
             cd todolist
             echo ${{ secrets.SSH_PASSWORD }} | sudo -S docker-compose up -d
-
-            
-            
-
-
-
