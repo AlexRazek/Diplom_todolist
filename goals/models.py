@@ -108,6 +108,6 @@ class GoalComment(DatesModelMixin):
     def __str__(self):
         return self.text
 
-    # @property
-    # def owner(self):
-    #     return self.goal.user
+    @property
+    def owner(self):
+        return self.goal.user

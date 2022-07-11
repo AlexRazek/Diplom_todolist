@@ -85,7 +85,7 @@ class BoardParticipantInline(admin.TabularInline):
 
 
 class BoardAdmin(admin.ModelAdmin):
-    list_display = ("title", "participants_count", "is_deleted", "owner") # "owner",
+    list_display = ("title", "participants_count", "is_deleted") # "owner",
     search_fields = ("title",)
     list_filter = ("is_deleted",)
     inlines = (BoardParticipantInline,)
@@ -95,13 +95,13 @@ class BoardAdmin(admin.ModelAdmin):
         queryset = queryset.prefetch_related("participants")
         return queryset
 
-    def owner(self, obj):
-        return obj.participants.filter(role=BoardParticipant.Role.owner).get().user
+    # def owner(self, obj):
+    #     return obj.participants.filter(role=BoardParticipant.Role.owner).get().user
 
     def participants_count(self, obj):
         return obj.participants.count() - 1
 
-    owner.short_description = 'Владелец'
+    # owner.short_description = 'Владелец'
     participants_count.short_description = 'Количество участников'
 
 

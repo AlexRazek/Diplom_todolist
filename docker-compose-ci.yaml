@@ -3,7 +3,7 @@ version: "3.9"
 services:
 
   frontend:
-    image: sermalenk/skypro-front:lesson_37
+    image: sermalenk/skypro-front:lesson_38
     restart: always
     ports:
       - "80:80"
@@ -11,6 +11,20 @@ services:
       api:
         condition: service_healthy
     networks:
+      - frontend_nw
+
+  bot:
+    image: alexrazek/todolist_alex:$GITHUB_REF_NAME-$GITHUB_RUN_ID
+    env_file:
+      - ./.env
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "python3 manage.py runbot"
+    networks:
+      - backend_nw
       - frontend_nw
 
   api:
@@ -60,8 +74,6 @@ networks:
     driver: bridge
   frontend_nw:
     driver: bridge
-
-
 
 
 
