@@ -26,3 +26,6 @@ mongoengine==0.24.1
 
 environ~=1.0
 pydantic~=1.9.1
+pytest~=7.1.2
+Faker~=11.3.0
+freezegun~=1.2.1

@@ -17,12 +17,14 @@ class GoalCreateView(CreateAPIView):
 
 
 class GoalView(RetrieveUpdateDestroyAPIView):
+    queryset = Goal.objects.all()
     model = Goal
     serializer_class = GoalSerializer
     permission_classes = [GoalPermissions]
 
     def get_queryset(self):
-        return Goal.objects.filter(category__board__participants__user=self.request.user, is_deleted=False)
+        return Goal.objects.filter(category__board__participants__user=self.request.user)         #is_deleted=False
+
 
     def perform_destroy(self, instance):
         instance.is_deleted = True
@@ -36,6 +38,7 @@ class GoalView(RetrieveUpdateDestroyAPIView):
 
 
 class GoalListView(ListAPIView):
+    # queryset = Goal.objects.all()
     model = Goal
     permission_classes = [GoalPermissions]
     serializer_class = GoalSerializer
@@ -51,4 +54,4 @@ class GoalListView(ListAPIView):
     search_fields = ["title", "description"]
 
     def get_queryset(self):
-        return Goal.objects.filter(category__board__participants__user=self.request.user, is_deleted=False)
+        return Goal.objects.filter(category__board__participants__user=self.request.user)

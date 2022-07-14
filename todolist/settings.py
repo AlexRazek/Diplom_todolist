@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'goals',
     'bot',
     'core',
+    # 'tests',
 ]
 #
 # APPS = ["core", "todolist",]

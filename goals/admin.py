@@ -18,7 +18,7 @@ class GoalInline(admin.TabularInline):
 
 # @admin.register(GoalCategory)
 class GoalCategoryAdmin(admin.ModelAdmin):
-    list_display = ("title", "user", "goals_count", "created", "updated")
+    list_display = ("title", "user", "goals_count", "created", "updated", "is_deleted")
     search_fields = ("title", "user")
     # readonly_fields = ("category", "updated")
     list_filter = ("is_deleted",)

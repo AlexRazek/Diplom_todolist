@@ -25,7 +25,7 @@ class GoalCategoryPermissions(permissions.BasePermission):
         if not request.user.is_authenticated:
             return False
 
-        filters : dict = {'user': request.user, 'board': obj.board}
+        filters: dict = {'user': request.user, 'board': obj.board}
         if request.method not in permissions.SAFE_METHODS:
             filters['role__in'] = [BoardParticipant.Role.owner, BoardParticipant.Role.writer]
             return BoardParticipant.objects.filter(**filters).exists()

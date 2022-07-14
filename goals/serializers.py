@@ -4,7 +4,7 @@ from rest_framework.exceptions import ValidationError
 
 from core.models import User
 from core.serializers import UserSerializer
-from goals.models import GoalCategory, GoalComment, Board, BoardParticipant
+from goals.models import GoalCategory, GoalComment, Board, BoardParticipant, Goal
 
 
 class GoalCategoryCreateSerializer(serializers.ModelSerializer):
@@ -42,7 +42,7 @@ class GoalSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
     class Meta:
-        model = GoalCategory
+        model = Goal
         fields = "__all__"
         read_only_fields = ("id", "created", "updated", "user")
 
@@ -71,8 +71,9 @@ class GoalCreateSerializer(GoalSerializer):
 
 
 class CommentCreateSerializer(serializers.ModelSerializer):
+
     class Meta:
-        models = GoalComment
+        model = GoalComment
         fields = "__all__"
         read_only_fields = ("id", "created", "updated", "user")
 
@@ -91,7 +92,7 @@ class CommentSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)
 
     class Meta:
-        models = GoalComment
+        model = GoalComment
         fields = "__all__"
         read_only_fields = ("id", "created", "updated", "user", "goal")
 

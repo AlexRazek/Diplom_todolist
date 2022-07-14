@@ -16,15 +16,17 @@ class CommentCreateView(CreateAPIView):
 
 
 class CommentView(RetrieveUpdateDestroyAPIView):
+    # queryset = GoalComment.objects.all()
     model = GoalComment
     serializer_class = CommentSerializer
     permission_classes = [CommentsPermissions]
 
     def get_queryset(self):
-        return GoalComment.objects.filter(goal__category__board__participants_user=self.request.user)
+        return GoalComment.objects.filter(goal__category__board__participants__user=self.request.user)
 
 
 class CommentListView(ListAPIView):
+    # queryset = GoalComment.objects.all()
     model = GoalComment
     permission_classes = [CommentsPermissions]
     serializer_class = CommentSerializer
@@ -37,4 +39,4 @@ class CommentListView(ListAPIView):
     ordering = '-id'
 
     def get_queryset(self):
-        return GoalComment.objects.filter(goal__category__board__participants_user=self.request.user)
+        return GoalComment.objects.filter(goal__category__board__participants__user=self.request.user)

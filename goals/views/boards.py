@@ -5,7 +5,7 @@ from rest_framework.filters import OrderingFilter
 
 from goals.models import Board, Goal
 from goals.permissionts import BoardPermissions
-from goals.serializers import BoardSerializer, BoardCreateSerializer
+from goals.serializers import BoardSerializer, BoardCreateSerializer, BoardListSerializer
 
 
 class BoardCreateView(CreateAPIView):
@@ -17,7 +17,7 @@ class BoardCreateView(CreateAPIView):
 class BoardListView(ListAPIView):
     model = Board
     permission_classes = [BoardPermissions]
-    serializer_class = BoardCreateSerializer
+    serializer_class = BoardListSerializer
     filter_backends = [
         OrderingFilter
     ]
