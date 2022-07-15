@@ -1,4 +1,6 @@
 # # from datetime import date
+from datetime import datetime
+
 import pytest
 from freezegun import freeze_time
 
@@ -21,8 +23,8 @@ def test_goal_category_create(client, hr_token):
     assert response.status_code == 200
     assert response.data == {
         "id": 1,
-        "created": "2022-07-14T10:50:40.392Z",
-        "updated": "2022-07-14T10:50:40.392Z",
+        "created": datetime.now().strftime("%Y-%m-%d"),
+        "updated": datetime.now().strftime("%Y-%m-%d"),
         "title": "Ludovik",
         "is_deleted": False,
         "board": 1
