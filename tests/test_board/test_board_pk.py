@@ -18,7 +18,7 @@ def test_board_list(client, hr_token):
     }
 
     response = client.get(
-        f"/goals/board/board.id/",
+        "/goals/board/{}/".format(1),
         content_type="application/json",
         HTTP_AUTHORIZATION=f"Bearer{hr_token}")
 

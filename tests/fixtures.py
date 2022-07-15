@@ -9,8 +9,9 @@ def hr_token(client, django_user_model):
     password = "password"
 
     django_user_model.objects.create_user(username=username, password=password)
-    response = client.post("/core/login/", {"username": username, "password": password}, format='json')
+    response = client.post("/core/login", {"username": username, "password": password}, format='json')
 
+    assert response.status_code == 200
     return response
 
 

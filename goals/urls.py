@@ -7,7 +7,7 @@ urlpatterns = [
     path("goal_category/list", category.GoalCategoryListView.as_view()),
     path("goal_category/<pk>", category.GoalCategoryView.as_view()),
 
-    path("goal/create", goals.GoalCreateView.as_view()),
+    path("goal/create", goals.GoalCreateView.as_view(), name='create-board'),
     path("goal/list", goals.GoalListView.as_view()),
     path("goal/<pk>", goals.GoalView.as_view()),
 

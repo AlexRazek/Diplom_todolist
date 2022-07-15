@@ -33,7 +33,7 @@ class LoginTestCase(BaseAPITestCase):
     def test_user_not_found(self):
         response = self.client.post(self.url, {
             'username': self._faker.user_name(),
-            'password': self._faker.password()
+            'password': self._faker.password(special_chars=False, length=12)
         })
         assert response.status_code == 403
         assert 'sessionid' not in self.client.cookies
