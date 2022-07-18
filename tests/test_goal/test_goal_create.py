@@ -1,36 +1,47 @@
-from datetime import datetime
-
 import pytest
 from freezegun import freeze_time
+from django.urls import reverse
 
 
 @pytest.mark.django_db
-@freeze_time('1970-01-01T05:00:00')
-def test_goal_category_create(client, hr_token):
+class TestGoalCreate:
+    url = reverse('goals:create-goal')
 
-    data = {
-          "title": "Letter",
-          "description": "New writer",
-          "status": 1,
-          "priority": 2,
-          "category": 3
-    }
+    @freeze_time('1970-01-01T05:00:00')
+    def test_success(self, auto_login_user):
+        client, _ = auto_login_user()
 
-    response = client.post(
-        "/goals/goal/create",
-        data,
-        content_type="application/json",
-        HTTP_AUTHORIZATION=f"Bearer{hr_token}")
+        response = client.post(self.url, {
+            "title": "Letter",
+            "description": "New writer",
+            "status": 1,
+            "priority": 2,
+            "category": 3
+        })
 
-    assert response.status_code == 200
-    assert response.data == {
+        assert response.status_code == 201
+        assert response.data == {
             "id": 1,
-            "created": datetime.now().strftime("%Y-%m-%d"),
-            "updated": datetime.now().strftime("%Y-%m-%d"),
+            "created": '1970-01-01T05:00:00Z',
+            "updated": '1970-01-01T05:00:00Z',
             "title": "Letter",
             "description": "writer",
             "status": 1,
             "priority": 2,
-            "due_date": datetime.now().strftime("%Y-%m-%d"),
-            "category": 3
+            "due_date": '1970-01-01T05:00:00Z',
+            "category": 3,
         }
+
+
+
+    def test_failed_not_authorized(self, client):
+        response = client.post(self.url, {
+            "title": "Letter",
+            "description": "New writer",
+            "status": 1,
+            "priority": 2,
+            "category": 3
+        })
+
+        assert response.status_code == 403
+

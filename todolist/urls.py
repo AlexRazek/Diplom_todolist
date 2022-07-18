@@ -38,7 +38,7 @@ urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
     path('oauth/', include('social_django.urls', namespace='social')),
     path('core/', include(('core.urls', 'core'), namespace='core')),
-    path('goals/', include('goals.urls')),
+    path('goals/', include(('goals.urls', 'goals'), namespace='goals')),
     path('health/', health_check, name='health-check'),
     path('bot/', include(('bot.urls', 'bot'), namespace='bot')),
     re_path(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),

@@ -1,26 +1,19 @@
 import pytest
-from datetime import datetime
-from goals.serializers import BoardParticipantSerializer
-from tests.factories import BoardFactoryPk
+from freezegun import freeze_time
+from django.urls import reverse
 
 
-@pytest.mark.django_db
-def test_board_list(client, hr_token):
-    # boards = BoardFactoryPk.create_batch(10)
+@pytest.mark.django_db(transaction=True)
+class TestBoardRetrieveUpdateDestroy:
+    # url = f"goals/board/{board.id}"
+    # url = reverse('goals:pk-board')
+    url = f'goals/board/<pk>'
 
-    expected_response = {
-        "id": 10,
-        "created": datetime.now().strftime("%Y-%m-%d"),
-        "updated": datetime.now().strftime("%Y-%m-%d"),
-        "title": "string",
-        "is_deleted": False,
-        "participants": BoardParticipantSerializer(many=True).data
-    }
+    # @freeze_time('1970-01-01T05:00:00')
+    def test_board_pk(self, auto_login_user):
+        client, _ = auto_login_user()
+        response = client.delete(self.url, {
+            "id": 1,
+        })
 
-    response = client.get(
-        f"/goals/board/board.id/",
-        content_type="application/json",
-        HTTP_AUTHORIZATION=f"Bearer{hr_token}")
-
-    assert response.status_code == 200
-    assert response.data == expected_response
+        assert response.status_code == 204

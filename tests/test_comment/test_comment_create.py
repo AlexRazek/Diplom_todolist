@@ -1,30 +1,35 @@
-from datetime import datetime
-
 import pytest
 from freezegun import freeze_time
+from django.urls import reverse
 
 
 @pytest.mark.django_db
-@freeze_time('1970-01-01T05:00:00')
-def test_goal_category_create(client, hr_token):
+class TestCommentCreate:
+    url = reverse('goals:create-goalcomment')
 
-    data = {
-        "text": "New moments",
-        "goal": 1
-    }
+    @freeze_time('1970-01-01T05:00:00')
+    def test_success(self, auto_login_user):
+        client, _ = auto_login_user()
 
-    response = client.post(
-        "/goals/goal_comment/create",
-        data,
-        content_type="application/json",
-        HTTP_AUTHORIZATION=f"Bearer{hr_token}")
+        response = client.post(self.url, {
+            "text": "New moments",
+            "goal": 1
+        })
 
-    assert response.status_code == 200
-    assert response.data == {
-        "id": 1,
-        "created": datetime.now().strftime("%Y-%m-%d"),
-        "updated": datetime.now().strftime("%Y-%m-%d"),
-        "text": "New moments",
-        "goal": 1,
-        "user": 1
-    }
+        assert response.status_code == 201
+        assert response.data == {
+            "id": 2,
+            "created": '1970-01-01T05:00:00Z',
+            "updated": '1970-01-01T05:00:00Z',
+            "text": "New moments",
+            "goal": 1,
+            "user": 3,
+        }
+
+    def test_failed_not_authorized(self, client):
+        response = client.post(self.url, {
+            "text": "New moments",
+            "goal": 1,
+        })
+
+        assert response.status_code == 403

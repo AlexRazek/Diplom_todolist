@@ -1,31 +1,51 @@
-from datetime import datetime
+# from datetime import datetime
 
 import pytest
 
 # from goals.models import GoalCategory, User
 # from goals.serializers import GoalCategorySerializer
-from goals.views.goals import GoalListView
-from tests.factories import GoalFactory
+# from goals.views.goals import GoalListView
+# from tests.factories import GoalFactory
+
+# from goals.serializers import BoardListSerializer
+# from tests.factories import BoardFactory
+from freezegun import freeze_time
+from django.urls import reverse
 
 
 @pytest.mark.django_db
-def test_goal_category_list(client, hr_token):
-    goals = GoalFactory.create_batch(10)
+class TestGoalList:
+    url = reverse('goals:list-goal')
 
-    expected_response = {
-        "count": 10,
-        "next": None,
-        "previous": None,
-        "results": GoalListView(goals, many=True).data
-    }
+    @freeze_time('1970-01-01T05:00:00')
+    def test_success(self, auto_login_user):
+        client, _ = auto_login_user()
 
-    response = client.get(
-        f"goals/goal_category/list/",
-        content_type="application/json",
-        HTTP_AUTHORIZATION="Token " + hr_token)
+        response = client.get(self.url)
 
-    assert response.status_code == 200
-    assert response.data == expected_response
+        assert response.status_code == 200
+        assert response.json() == []
+
+
+
+# @pytest.mark.django_db
+# def test_goal_category_list(client, hr_token):
+#     goals = GoalFactory.create_batch(10)
+#
+#     expected_response = {
+#         "count": 10,
+#         "next": None,
+#         "previous": None,
+#         "results": GoalListView(goals, many=True).data
+#     }
+#
+#     response = client.get(
+#         f"goals/goal_category/list/",
+#         content_type="application/json",
+#         HTTP_AUTHORIZATION="Token " + hr_token)
+#
+#     assert response.status_code == 200
+#     assert response.data == expected_response
 
 # @pytest.mark.django_db
 # def test_goal_category_list(client, hr_token):

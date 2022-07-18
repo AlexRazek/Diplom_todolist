@@ -2,16 +2,17 @@ import pytest
 import uuid
 
 
-@pytest.fixture()
-@pytest.mark.django_db
-def hr_token(client, django_user_model):
-    username = "username"
-    password = "password"
-
-    django_user_model.objects.create_user(username=username, password=password)
-    response = client.post("/core/login/", {"username": username, "password": password}, format='json')
-
-    return response
+# @pytest.fixture()
+# @pytest.mark.django_db
+# def hr_token(client, django_user_model):
+#     username = "username"
+#     password = "password"
+#
+#     django_user_model.objects.create_user(username=username, password=password)
+#     response = client.post("/core/login/", {"username": username, "password": password}, format='json')
+#
+#     assert response.status_code == 200
+#     return response
 
 
 @pytest.fixture()
@@ -40,3 +41,5 @@ def auto_login_user(db, client, create_user, test_password):
         return client, user
 
     return make_auto_login
+
+
