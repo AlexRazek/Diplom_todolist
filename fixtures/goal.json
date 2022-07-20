@@ -1,0 +1,33 @@
+[
+  {
+    "model": "goals.goal",
+    "pk": 1,
+    "fields": {
+          "id": 1,
+          "created": "2022-07-20T12:00:38.975Z",
+          "updated": "2022-07-20T12:00:38.975Z",
+          "title": "postik",
+          "description": "Направление",
+          "status": 1,
+          "priority": 1,
+          "due_date": "2022-07-20",
+          "user_id": 1,
+          "category": 1
+        }
+  },
+    {
+    "model": "goals.goal",
+    "pk": 2,
+    "fields": {
+          "created": "2022-07-20T12:00:38.975Z",
+          "updated": "2022-07-20T12:00:38.975Z",
+          "title": "postik",
+          "description": "Направление",
+          "status": 1,
+          "priority": 1,
+          "due_date": "2022-07-20",
+          "user_id": 1,
+          "category": 1
+        }
+  }
+]

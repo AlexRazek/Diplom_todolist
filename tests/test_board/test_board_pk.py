@@ -7,13 +7,14 @@ from django.urls import reverse
 class TestBoardRetrieveUpdateDestroy:
     # url = f"goals/board/{board.id}"
     # url = reverse('goals:pk-board')
-    url = f'goals/board/<pk>'
+    url = f'(goals/board/<pk>)'
 
     # @freeze_time('1970-01-01T05:00:00')
     def test_board_pk(self, auto_login_user):
         client, _ = auto_login_user()
-        response = client.delete(self.url, {
-            "id": 1,
+
+        response = client.get(self.url, {
+            "pk": 1
         })
 
         assert response.status_code == 204

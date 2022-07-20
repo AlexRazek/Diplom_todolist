@@ -2,7 +2,7 @@
 import factory.django
 
 from core.models import User
-from goals.models import Goal, Board, GoalCategory
+from goals.models import Goal, Board, GoalCategory, GoalComment
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -56,3 +56,14 @@ class GoalFactory(factory.django.DjangoModelFactory):
     category = factory.Faker("category")
     title = factory.Faker("title_goal")
     user = factory.SubFactory(UserFactory)
+
+
+class CommentFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = GoalComment
+
+    goal = factory.SubFactory(GoalFactory)
+    text = factory.Faker("New moments")
+    user = factory.Faker(2)
+    category = factory.SubFactory(GoalCategoryFactory)
+    board = factory.Faker(2)

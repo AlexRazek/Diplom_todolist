@@ -1,0 +1,14 @@
+[
+  {
+    "model": "goals.goalcomment",
+    "pk": 1,
+    "fields": {
+      "id": 1,
+      "created": "1970-01-01T05:00:00Z",
+      "updated": "1970-01-01T05:00:00Z",
+      "text": "new",
+      "goal": 1,
+      "user": 1
+    }
+  }
+]
