@@ -4,6 +4,7 @@ import pytest
 from pytest_factoryboy import register
 from core.models import User
 from tests.factories import BoardParticipantFactory, UserFactory, GoalCategoryFactory, BoardFactory, GoalFactory
+
 pytest_plugins = "tests.fixtures"
 
 register(BoardFactory)
