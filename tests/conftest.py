@@ -1,9 +1,16 @@
 import uuid
-
 import pytest
 
+from pytest_factoryboy import register
 from core.models import User
-from tests.factories import BoardParticipantFactory, UserFactory, GoalCategoryFactory
+from tests.factories import BoardParticipantFactory, UserFactory, GoalCategoryFactory, BoardFactory, GoalFactory
+pytest_plugins = "tests.fixtures"
+
+register(BoardFactory)
+register(GoalFactory)
+register(GoalCategoryFactory)
+register(UserFactory)
+register(BoardParticipantFactory)
 
 
 @pytest.fixture()
@@ -42,7 +49,6 @@ def create_board(db):
         return board_participants.board, board_participants.user
 
     return _create_board
-
 
 
 @pytest.fixture()

@@ -7,7 +7,7 @@ from django.urls import reverse
 
 @pytest.mark.django_db
 class TestGoalCategoryList:
-    url = reverse('goals:list-goalcomment')
+    url = reverse('goals:list-goalcategory')
 
     @freeze_time('1970-01-01T05:00:00')
     def test_success(self, auto_login_user):
@@ -17,3 +17,6 @@ class TestGoalCategoryList:
 
         assert response.status_code == 200
         assert response.json() == []
+
+
+

@@ -49,8 +49,8 @@ class TestGoalCategoryCreate:
         )
 
         response = client.post(self.url, {
-                "title": faker.text(20),
-                "board": board.id,
+            "title": faker.text(20),
+            "board": board.id,
         })
         assert response.status_code == 201
 
@@ -77,3 +77,4 @@ class TestGoalCategoryCreate:
             "is_deleted": False,
             "board": board.id
         }
+

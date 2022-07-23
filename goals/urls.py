@@ -4,7 +4,7 @@ from goals.views import category, goals, comment, boards
 
 urlpatterns = [
     path("goal_category/create", category.GoalCategoryCreateView.as_view(), name='create-goalcategory'),
-    path("goal_category/list", category.GoalCategoryListView.as_view(), name='list-goalcomment'),
+    path("goal_category/list", category.GoalCategoryListView.as_view(), name='list-goalcategory'),
     path("goal_category/<pk>", category.GoalCategoryView.as_view(), name='pk-goalcomment'),
 
     path("goal/create", goals.GoalCreateView.as_view(), name='create-goal'),

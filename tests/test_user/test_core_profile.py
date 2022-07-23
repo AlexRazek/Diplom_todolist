@@ -11,35 +11,28 @@ class TestCoreProfileRead:
         response = client.get(self.url)
         assert response.status_code == 403
 
-    def test_core_profile_read(self, auto_login_user):
+    def test_core_profile_read(self, auto_login_user, user):
         client, _ = auto_login_user()
 
         response = client.get(self.url)
 
         assert response.status_code == 200
-        # assert response.data == {
-        #     "id": 1,
-        #     "username": "",
-        #     "first_name": "",
-        #     "last_name": "",
-        #     "email": ""
-        # }
 
 
 @pytest.mark.django_db
 class TestCoreProfile:
     url = reverse('core:profile')
 
-    def test_core_profile_put(self, auto_login_user):
+    def test_core_profile_put(self, auto_login_user, user):
         client, _ = auto_login_user()
 
-        response = client.patch(self.url, {
-            "username": "kik"
-        })
+        data = {"username": "kik"}
+
+        response = client.patch(self.url, data, content_type="application/json")
 
         assert response.status_code == 200
         assert response.data == {
-            "id": 1,
+            "id": user.id + 1,
             "username": "kik",
             "first_name": "",
             "last_name": "",

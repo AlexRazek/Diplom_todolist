@@ -16,7 +16,9 @@ class UserFactory(factory.django.DjangoModelFactory):
 
 
 class BoardFactory(factory.django.DjangoModelFactory):
+    # title = 'board_title'
     title = factory.sequence(lambda n: f'board_title_{n}')
+    is_deleted = False
 
     class Meta:
         model = Board
