@@ -1,6 +1,5 @@
 import pytest
 
-from freezegun import freeze_time
 from django.urls import reverse
 
 
@@ -8,25 +7,21 @@ from django.urls import reverse
 class TestBoardList:
     url = reverse('goals:list-board')
 
-    @freeze_time('1970-01-01T05:00:00')
-    def test_success(self, auto_login_user, board):
-        client, _ = auto_login_user()
+    def test_not_authorized(self, client):
+        response = client.get(self.url)
+        assert response.status_code == 403
 
-        # data = {
-        #     "id": board.id,
-        #     "created": "2022-07-04T09:01:31.575766Z",
-        #     "updated": "2022-07-04T09:17:49.783309Z",
-        #     "title": board.title,
-        #     "is_deleted": False
-        # }
-
-        response = client.get(self.url, content_type='application/json')
+    def test_success(self, client, board, board_participant):
+        client.force_login(user=board_participant.user)
+        response = client.get(self.url)
 
         assert response.status_code == 200
-        assert response.json() == {
-            "id": board.id,
-            "created": "2022-07-04T09:01:31.575766Z",
-            "updated": "2022-07-04T09:17:49.783309Z",
-            "title": board.title,
-            "is_deleted": False
-        }
+        assert response.json() == [
+            {
+                "id": board.id,
+                "created": board.created.isoformat().replace('+00:00', 'Z'),
+                "updated": board.updated.isoformat().replace('+00:00', 'Z'),
+                "title": board.title,
+                "is_deleted": False
+            }
+        ]
