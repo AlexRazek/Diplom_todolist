@@ -11,8 +11,8 @@ class TestCoreProfileRead:
         response = client.get(self.url)
         assert response.status_code == 403
 
-    def test_core_profile_read(self, auto_login_user, user):
-        client, _ = auto_login_user()
+    def test_core_profile_read(self, auto_login_user):
+        client, user = auto_login_user()
 
         response = client.get(self.url)
 
@@ -23,8 +23,8 @@ class TestCoreProfileRead:
 class TestCoreProfile:
     url = reverse('core:profile')
 
-    def test_core_profile_put(self, auto_login_user, user):
-        client, _ = auto_login_user()
+    def test_core_profile_put(self, auto_login_user):
+        client, user = auto_login_user()
 
         data = {"username": "kik"}
 
@@ -32,7 +32,7 @@ class TestCoreProfile:
 
         assert response.status_code == 200
         assert response.data == {
-            "id": user.id + 1,
+            "id": user.id,
             "username": "kik",
             "first_name": "",
             "last_name": "",
@@ -40,7 +40,7 @@ class TestCoreProfile:
         }
 
     def test_core_profile_delete(self, auto_login_user):
-        client, _ = auto_login_user()
+        client, user = auto_login_user()
 
         response = client.delete(self.url, {
             "id": 1,

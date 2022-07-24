@@ -18,9 +18,9 @@ class GoalCategoryCreateView(CreateAPIView):
 
 
 class GoalCategoryListView(ListAPIView):
+    permission_classes = [GoalCategoryPermissions]
     queryset = GoalCategory.objects.all()
     model = GoalCategory
-    permission_classes = [GoalCategoryPermissions]
     serializer_class = GoalCategorySerializer
     pagination_class = LimitOffsetPagination
     filter_backends = [
@@ -34,8 +34,10 @@ class GoalCategoryListView(ListAPIView):
     search_fields = ["title"]
 
     def get_queryset(self):
-        return GoalCategory.objects.filter(
-            board__participants__user=self.request.user)     # is_deleted=False
+        return GoalCategory.objects.select_related('user').filter(
+            board__participants__user_id=self.request.user.id,
+            is_deleted=False
+        )
 
 
 class GoalCategoryView(RetrieveUpdateDestroyAPIView):
