@@ -1,15 +1,7 @@
-# from datetime import datetime
+import ast
 
 import pytest
 
-# from goals.models import GoalCategory, User
-# from goals.serializers import GoalCategorySerializer
-# from goals.views.goals import GoalListView
-# from tests.factories import GoalFactory
-
-# from goals.serializers import BoardListSerializer
-# from tests.factories import BoardFactory
-from freezegun import freeze_time
 from django.urls import reverse
 
 
@@ -17,102 +9,32 @@ from django.urls import reverse
 class TestGoalList:
     url = reverse('goals:list-goal')
 
-    @freeze_time('1970-01-01T05:00:00')
-    def test_success(self, auto_login_user):
-        client, _ = auto_login_user()
+    def test_not_authorized(self, client):
+        response = client.get(self.url)
+        assert response.status_code == 403
 
+    def test_success(self, client, goal, board_participant):
+        client.force_login(user=board_participant.user)
         response = client.get(self.url)
 
         assert response.status_code == 200
-        assert response.json() == []
-
-
-
-# @pytest.mark.django_db
-# def test_goal_category_list(client, hr_token):
-#     goals = GoalFactory.create_batch(10)
-#
-#     expected_response = {
-#         "count": 10,
-#         "next": None,
-#         "previous": None,
-#         "results": GoalListView(goals, many=True).data
-#     }
-#
-#     response = client.get(
-#         f"goals/goal_category/list/",
-#         content_type="application/json",
-#         HTTP_AUTHORIZATION="Token " + hr_token)
-#
-#     assert response.status_code == 200
-#     assert response.data == expected_response
-
-# @pytest.mark.django_db
-# def test_goal_category_list(client, hr_token):
-#     expected_response = {
-#         "count": 0,
-#         "next": "string",
-#         "previous": "string",
-#         "results": [
-#             {
-#                 "id": 1,
-#                 "user": {
-#                     "id": 2,
-#                     "username": "Nik",
-#                     "first_name": "string",
-#                     "last_name": "string",
-#                     "email": "Nik@google.com"
-#                 },
-#                 "created": datetime.now().strftime("%Y-%m-%d"),
-#                 "updated": datetime.now().strftime("%Y-%m-%d"),
-#                 "title": "New",
-#                 "is_deleted": True,
-#                 "board": 3
-#             }
-#         ]
-#     }
-#     goal_categories = GoalCategoryFactory.create_batch(10)
-#
-#     expected_response = {
-#         "count": 10,
-#         "next": None,
-#         "previous": None,
-#         "results": GoalCategoryListView(goal_categories, many=True).data
-#     }
-#
-
-#     response = client.get(
-#         "/goal_category/list/",
-#         content_type="application/json",
-#         HTTP_AUTHORIZATION="Token " + hr_token)
-#
-#     assert response.status_code == 200
-#     assert response.data == expected_response
-
-
-# @pytest.mark.django_db
-# def test_goal_category_list(client):
-#     goal_category = GoalCategory.objects.create(
-#         title="что-то интересное",
-#         is_deleted=False,
-#     )
-#     expected_response = {
-#         "id": goal_category.pk,
-#         "user": {
-#             "id": 1,
-#             "username": "None",
-#             "first_name": "",
-#             "last_name": "",
-#             "email": ""
-#         },
-#         "created": datetime.now().strftime("%Y-%m-%d"),
-#         "updated": datetime.now().strftime("%Y-%m-%d"),
-#         "title": "что-то интересное",
-#         "is_deleted": False,
-#         "board": 2
-#         }
-#
-#     response = client.get("goal_category/create/")
-#
-#     assert response.status_code == 200
-#     assert response.data == expected_response
+        assert response.json() == [
+            {
+                'id': goal.id,
+                'user': {
+                    'id': board_participant.user.id,
+                    'username': board_participant.user.username,
+                    'first_name': board_participant.user.first_name,
+                    'last_name': board_participant.user.last_name,
+                    'email': board_participant.user.email
+                },
+                'created': goal.created.isoformat().replace('+00:00', 'Z'),
+                'updated': goal.updated.isoformat().replace('+00:00', 'Z'),
+                'title': goal.title,
+                'description': goal.description,
+                'status': ast.literal_eval(goal.status),
+                'priority': ast.literal_eval(goal.priority),
+                'due_date': goal.due_date,
+                'category': goal.category_id
+            }
+        ]

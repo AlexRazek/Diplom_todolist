@@ -1,7 +1,9 @@
+from datetime import date
+
 import factory.django
 
 from core.models import User
-from goals.models import Board, BoardParticipant, GoalCategory, Goal
+from goals.models import Board, BoardParticipant, GoalCategory, Goal, GoalComment
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -43,12 +45,22 @@ class GoalCategoryFactory(factory.django.DjangoModelFactory):
 
 class GoalFactory(factory.django.DjangoModelFactory):
     user = factory.SubFactory(UserFactory)
-    title = factory.Faker('title')
-    description = factory.Faker('New description')
+    title = factory.sequence(lambda n: f'goal_title_{n}')
+    description = factory.sequence(lambda n: f'goal_description_{n}')
     category = factory.SubFactory(GoalCategoryFactory)
-    status = factory.Faker('1')
-    priority = factory.Faker('2')
-    due_date = '1970-01-01T05:00:00Z'
+    status = factory.sequence(lambda n: f'{n}')
+    priority = factory.sequence(lambda n: f'{n}')
+    due_date = date.today().strftime('%Y-%m-%d')
 
     class Meta:
         model = Goal
+
+
+class GoalCommentFactory(factory.django.DjangoModelFactory):
+    goal = factory.SubFactory(GoalFactory)
+    text = factory.sequence(lambda n: f'goalcomment_text_{n}')
+    user = factory.SubFactory(UserFactory)
+
+    class Meta:
+        model = GoalComment
+

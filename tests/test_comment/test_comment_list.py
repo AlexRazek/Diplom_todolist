@@ -1,19 +1,34 @@
 import pytest
 
-
-from freezegun import freeze_time
 from django.urls import reverse
 
 
 @pytest.mark.django_db
-class TestGaolCommentList:
+class TestGoalCommentList:
     url = reverse('goals:list-goalcomment')
 
-    @freeze_time('1970-01-01T05:00:00')
-    def test_success(self, auto_login_user):
-        client, _ = auto_login_user()
+    def test_not_authorized(self, client):
+        response = client.get(self.url)
+        assert response.status_code == 403
 
+    def test_success(self, client, goal_comment, board_participant):
+        client.force_login(user=board_participant.user)
         response = client.get(self.url)
 
         assert response.status_code == 200
-        assert response.json() == []
+        assert response.json() == [
+            {
+                'id': goal_comment.id,
+                'user': {
+                    'id': board_participant.user.id,
+                    'username': board_participant.user.username,
+                    'first_name': board_participant.user.first_name,
+                    'last_name': board_participant.user.last_name,
+                    'email': board_participant.user.email
+                },
+                'created': goal_comment.created.isoformat().replace('+00:00', 'Z'),
+                'updated': goal_comment.updated.isoformat().replace('+00:00', 'Z'),
+                'text': goal_comment.text,
+                'goal': goal_comment.goal_id,
+            }
+        ]

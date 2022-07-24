@@ -3,7 +3,7 @@ import pytest
 
 from pytest_factoryboy import register
 from core.models import User
-from tests.factories import BoardParticipantFactory, UserFactory, GoalCategoryFactory, BoardFactory, GoalFactory
+from tests.factories import BoardParticipantFactory, UserFactory, GoalCategoryFactory, BoardFactory, GoalFactory, GoalCommentFactory
 
 pytest_plugins = "tests.fixtures"
 
@@ -12,6 +12,7 @@ register(GoalFactory)
 register(GoalCategoryFactory)
 register(UserFactory)
 register(BoardParticipantFactory)
+register(GoalCommentFactory)
 
 
 @pytest.fixture()

@@ -58,7 +58,7 @@ class TestGoalCategoryCreate:
         # assert response.json() == {'board': ['Please check role']}
 
     @freeze_time('1970-01-01T00:00:00')
-    def test_success(self, auto_login_user, create_board):
+    def test_success(self, auto_login_user, create_board, goal_category):
         client, user = auto_login_user()
 
         board, _ = create_board(owner=user)
@@ -70,7 +70,7 @@ class TestGoalCategoryCreate:
 
         assert response.status_code == 201
         assert response.data == {
-            "id": 2,
+            "id": goal_category.id + 1,
             "created": '1970-01-01T00:00:00Z',
             "updated": '1970-01-01T00:00:00Z',
             "title": "new_cat_title",
